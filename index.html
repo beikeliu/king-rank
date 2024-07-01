@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+
+<body>
+  <form id="heroForm">
+    <label for="heroName">英雄名称:</label>
+    <input type="text" id="heroName" name="heroName" required>
+    <br />
+    <label>系统类型:</label>
+    <input type="radio" id="androidWeChat" name="systemType" value="awx" required>
+    <label for="androidWeChat">安卓微信</label>
+    <input type="radio" id="androidQQ" name="systemType" value="aqq" required>
+    <label for="androidQQ">安卓QQ</label>
+    <input type="radio" id="appleWeChat" name="systemType" value="iwx" required>
+    <label for="appleWeChat">苹果微信</label>
+    <input type="radio" id="appleQQ" name="systemType" value="iqq" required>
+    <label for="appleQQ">苹果QQ</label>
+    <br />
+    <button type="submit">查询</button>
+  </form>
+  <div id="result"></div>
+  <script>
+    document.getElementById('heroForm').addEventListener('submit', function (e) {
+      e.preventDefault(); // 阻止表单默认提交行为
+      const heroName = document.getElementById('heroName').value;
+      const systemType = document.querySelector('input[name="systemType"]:checked').value;
+      fetch(
+        `https://api.xxoo.team/hero/getHeroInfo.php?hero=${heroName}&type=${systemType}`
+      )
+        .then((response) => response.json()) // 将响应体转换为JSON
+        .then((data) => {
+          // 将数据渲染到页面上
+          const resultDiv = document.getElementById('result');
+          // 清空之前的结果
+          resultDiv.innerHTML = '';
+          // 创建一个pre标签，以格式化显示JSON
+          const pre = document.createElement('pre');
+          // 使用JSON.stringify将JSON对象转换为字符串，第二个参数为null，第三个参数为2表示格式化缩进
+          pre.textContent = JSON.stringify(data.data, null, 2);
+          // 将pre标签添加到结果div中
+          resultDiv.appendChild(pre)
+        }) // 处理数据
+        .catch((error) => console.error("请求失败:", error)); // 处理错误
+    });
+  </script>
+</body>
+
+</html>
